@@ -1,0 +1,425 @@
+──(root㉿kali)-[/home/kali]
+└─# sudo apt install -y nmap                                  
+nmap is already the newest version (7.95+dfsg-3kali1).
+The following packages were automatically installed and are no longer required:
+  libbluray2        libogdi4.1          libsoup2.4-common  libwiretap15
+  libgdal36         libplacebo349       libtheora0         libwsutil16
+  libgdata-common   libportmidi0        libtheoradec1      linux-image-6.12.25-amd64
+  libgdata22        libqt5ct-common1.8  libtheoraenc1      python3-packaging-whl
+  libgeos3.13.1     libsframe1          libudfread0        python3-pyinstaller-hooks-contrib
+  libhdf4-0-alt     libsigsegv2         libvpx9            python3-wheel-whl
+  libjs-underscore  libsoup-2.4-1       libwireshark18
+Use 'sudo apt autoremove' to remove them.
+
+Summary:
+  Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 1030
+                                                                                                       
+┌──(root㉿kali)-[/home/kali]
+└─# ip -o -f inet addr show $(ip route show default | awk '{print $5}') | awk '{print $4}'
+192.168.1.4/24
+                                                                                                       
+┌──(root㉿kali)-[/home/kali]
+└─# sudo nmap -sS 192.168.1.0/24
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-13 13:39 IST
+Nmap scan report for dsldevice.lan (192.168.1.1)
+Host is up (0.0023s latency).
+Not shown: 983 filtered tcp ports (no-response)
+PORT      STATE  SERVICE
+80/tcp    open   http
+443/tcp   open   https
+445/tcp   closed microsoft-ds
+631/tcp   closed ipp
+8008/tcp  closed http
+8099/tcp  closed unknown
+49152/tcp closed unknown
+49153/tcp closed unknown
+49154/tcp closed unknown
+49155/tcp closed unknown
+49156/tcp closed unknown
+49157/tcp closed unknown
+49158/tcp closed unknown
+49159/tcp closed unknown
+49160/tcp closed unknown
+49161/tcp closed unknown
+49163/tcp closed unknown
+MAC Address: 5C:8C:30:CC:14:D0 (Taicang T&W Electronics)
+
+Nmap scan report for 192.168.1.2
+Host is up (0.065s latency).
+All 1000 scanned ports on 192.168.1.2 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+MAC Address: EE:E7:D2:C7:6F:88 (Unknown)
+
+Nmap scan report for 192.168.1.7
+Host is up (0.00014s latency).
+All 1000 scanned ports on 192.168.1.7 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+MAC Address: F8:54:F6:75:BB:B5 (AzureWave Technology)
+
+Nmap scan report for 192.168.1.8
+Host is up (0.0044s latency).
+All 1000 scanned ports on 192.168.1.8 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+MAC Address: 82:78:59:E8:82:B5 (Unknown)
+
+Nmap scan report for 192.168.1.47
+Host is up (0.0074s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT      STATE SERVICE
+49152/tcp open  unknown
+62078/tcp open  iphone-sync
+MAC Address: D6:E2:F1:0B:18:C0 (Unknown)
+
+Nmap scan report for 192.168.1.4
+Host is up (0.0000070s latency).
+All 1000 scanned ports on 192.168.1.4 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+
+Nmap done: 256 IP addresses (6 hosts up) scanned in 247.35 seconds
+                                                                                                       
+┌──(root㉿kali)-[/home/kali]
+└─# sudo nmap -sS 192.168.1.0/24 -oG - | awk '/Up$/{print $2,$0}'
+
+192.168.1.1 Host: 192.168.1.1 (dsldevice.lan)   Status: Up
+192.168.1.2 Host: 192.168.1.2 ()        Status: Up
+192.168.1.7 Host: 192.168.1.7 ()        Status: Up
+192.168.1.8 Host: 192.168.1.8 ()        Status: Up
+192.168.1.47 Host: 192.168.1.47 ()      Status: Up
+192.168.1.4 Host: 192.168.1.4 ()        Status: Up
+                                                                                                       
+┌──(root㉿kali)-[/home/kali]
+└─# sudo tcpdump -i eth0 -w scan_capture.pcap
+
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+^C1239 packets captured
+1239 packets received by filter
+0 packets dropped by kernel
+                                                                                                       
+┌──(root㉿kali)-[/home/kali]
+└─# grep "80/tcp" /etc/services
+
+http            80/tcp          www             # WorldWideWeb HTTP
+socks           1080/tcp                        # socks proxy server
+http-alt        8080/tcp        webcache        # WWW caching service
+amanda          10080/tcp                       # amanda backup services
+canna           5680/tcp                        # cannaserver
+                                                                                                       
+┌──(root㉿kali)-[/home/kali]
+└─# sudo nmap -sV --script vuln 192.168.1.0/24
+
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-13 14:09 IST
+WARNING: Service 192.168.1.1:80 had already soft-matched rtsp, but now soft-matched sip; ignoring second value
+WARNING: Service 192.168.1.1:443 had already soft-matched rtsp, but now soft-matched sip; ignoring second value
+Nmap scan report for dsldevice.lan (192.168.1.1)
+Host is up (0.0057s latency).
+Not shown: 995 filtered tcp ports (no-response)
+PORT      STATE  SERVICE      VERSION
+80/tcp    open   rtsp
+|_http-server-header: thttpd
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+| fingerprint-strings: 
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Cache-Control:private,max-age=0;
+|     X-Frame-Options:SAMEORIGIN
+|     X-Content-Type-Options:nosniff
+|     X-XSS-Protection:1; mode=block
+|     Content-Security-Policy:default-src 'self' blob: 'unsafe-inline' 'unsafe-eval';img-src * data: 'unsafe-inline'
+|     Strict-Transport-Security:max-age=2592000; includeSubdomains
+|     Referrer-Policy: no-referrer
+|     Set-Cookie: lang=eng; path=/;
+|     Content-type:text/html;charset=UTF-8;
+|     <!-- vim:fenc=utf-8
+|     <html>
+|     <head>
+|     <title>
+|     GPON Home Gateway
+|     </title> 
+|     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+|     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+|     <meta name="referrer" content="no-referrer"/>
+|     <script>if(self!=top) top.location=self.location
+|     if(!window.name){
+|     location.reload();
+|     window.name = 'Bell';
+|     </script>
+|     <link rel="stylesheet" href='/css_glb/main.css' type='text/css'/>
+|   HTTPOptions: 
+|     HTTP/1.0 501 Not Implemented
+|     Referrer-Policy: no-referrer
+|     Server: thttpd
+|     Content-Type: text/html; charset=utf-8
+|     Date: Thu, 13 Nov 2025 08:39:47 GMT
+|     Last-Modified: Thu, 13 Nov 2025 08:39:47 GMT
+|     Accept-Ranges: bytes
+|     Connection: close
+|     Cache-Control: no-cache,no-store
+|     <HTML>
+|     <HEAD><TITLE>501 Not Implemented</TITLE></HEAD>
+|     <BODY BGCOLOR="#cc9999" TEXT="#000000" LINK="#2020ff" VLINK="#4040cc">
+|     <H2>501 Not Implemented</H2>
+|     requested method 'OPTIONS' is not implemented by this server.
+|     <HR>
+|     </BODY>
+|     </HTML>
+|   RTSPRequest: 
+|     RTSP/1.0 501 Not Implemented
+|     Referrer-Policy: no-referrer
+|     Server: thttpd
+|     Content-Type: text/html; charset=utf-8
+|     Date: Thu, 13 Nov 2025 08:39:47 GMT
+|     Last-Modified: Thu, 13 Nov 2025 08:39:47 GMT
+|     Accept-Ranges: bytes
+|     Connection: close
+|     Cache-Control: no-cache,no-store
+|     <HTML>
+|     <HEAD><TITLE>501 Not Implemented</TITLE></HEAD>
+|     <BODY BGCOLOR="#cc9999" TEXT="#000000" LINK="#2020ff" VLINK="#4040cc">
+|     <H2>501 Not Implemented</H2>
+|     requested method 'OPTIONS' is not implemented by this server.
+|     <HR>
+|     </BODY>
+|_    </HTML>
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+|_http-vuln-cve2014-3704: ERROR: Script execution failed (use -d to debug)
+443/tcp   open   ssl/rtsp
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+| fingerprint-strings: 
+|   FourOhFourRequest: 
+|     HTTP/1.0 404 Not Found
+|     Referrer-Policy: no-referrer
+|     Server: thttpd
+|     Content-Type: text/html; charset=utf-8
+|     Date: Thu, 13 Nov 2025 08:39:54 GMT
+|     Last-Modified: Thu, 13 Nov 2025 08:39:54 GMT
+|     Accept-Ranges: bytes
+|     Connection: close
+|     Cache-Control: no-cache,no-store
+|     <html>
+|     <head>
+|     </head>
+|     <body>
+|     style="text-align: center; height: 150px">
+|     <span>
+|     Error 404 Not found
+|     </span>
+|     </h1>
+|     style="text-align:center; font-size: 16px; font-weight: 400; padding: 10px 20px;">
+|     requested URL was not found on this server
+|     </p>
+|     <div style="text-align: center;">
+|     href="/">Home</a>
+|     </div>
+|     </body>
+|     </html>
+|     <HR>
+|     </BODY>
+|     </HTML>
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Cache-Control:private,max-age=0;
+|     X-Frame-Options:SAMEORIGIN
+|     X-Content-Type-Options:nosniff
+|     X-XSS-Protection:1; mode=block
+|     Content-Security-Policy:default-src 'self' blob: 'unsafe-inline' 'unsafe-eval';img-src * data: 'unsafe-inline'
+|     Strict-Transport-Security:max-age=2592000; includeSubdomains
+|     Referrer-Policy: no-referrer
+|     Set-Cookie: lang=eng; path=/;
+|     Content-type:text/html;charset=UTF-8;
+|     <!-- vim:fenc=utf-8
+|     <html>
+|     <head>
+|     <title>
+|     GPON Home Gateway
+|     </title> 
+|     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+|     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+|     <meta name="referrer" content="no-referrer"/>
+|     <script>if(self!=top) top.location=self.location
+|     if(!window.name){
+|     location.reload();
+|     window.name = 'Bell';
+|     </script>
+|     <link rel="stylesheet" href='/css_glb/main.css' type='text/css'/>
+|   HTTPOptions: 
+|     HTTP/1.0 501 Not Implemented
+|     Referrer-Policy: no-referrer
+|     Server: thttpd
+|     Content-Type: text/html; charset=utf-8
+|     Date: Thu, 13 Nov 2025 08:39:54 GMT
+|     Last-Modified: Thu, 13 Nov 2025 08:39:54 GMT
+|     Accept-Ranges: bytes
+|     Connection: close
+|     Cache-Control: no-cache,no-store
+|     <HTML>
+|     <HEAD><TITLE>501 Not Implemented</TITLE></HEAD>
+|     <BODY BGCOLOR="#cc9999" TEXT="#000000" LINK="#2020ff" VLINK="#4040cc">
+|     <H2>501 Not Implemented</H2>
+|     requested method 'OPTIONS' is not implemented by this server.
+|     <HR>
+|     </BODY>
+|_    </HTML>
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-server-header: thttpd
+|_http-vuln-cve2014-3704: ERROR: Script execution failed (use -d to debug)
+|_http-aspnet-debug: ERROR: Script execution failed (use -d to debug)
+445/tcp   closed microsoft-ds
+49159/tcp closed unknown
+49160/tcp closed unknown
+2 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at https://nmap.org/cgi-bin/submit.cgi?new-service :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port80-TCP:V=7.95%I=7%D=11/13%Time=6915994E%P=x86_64-pc-linux-gnu%r(Get
+SF:Request,3631,"HTTP/1\.0\x20200\x20OK\r\nCache-Control:private,max-age=0
+SF:;\r\nX-Frame-Options:SAMEORIGIN\r\nX-Content-Type-Options:nosniff\r\nX-
+SF:XSS-Protection:1;\x20mode=block\r\nContent-Security-Policy:default-src\
+SF:x20'self'\x20blob:\x20'unsafe-inline'\x20'unsafe-eval';img-src\x20\*\x2
+SF:0data:\x20'unsafe-inline'\r\nStrict-Transport-Security:max-age=2592000;
+SF:\x20includeSubdomains\r\nReferrer-Policy:\x20no-referrer\r\nSet-Cookie:
+SF:\x20lang=eng;\x20path=/;\r\nContent-type:text/html;charset=UTF-8;\r\n\r
+SF:\n<!--\x20vim:fenc=utf-8\r\n-->\r\n<html>\r\n<head>\r\n<title>\r\n\r\nG
+SF:PON\x20Home\x20Gateway\r\n\r\n</title>\t\t\r\n<meta\x20http-equiv=\"Con
+SF:tent-Type\"\x20content=\"text/html;\x20charset=UTF-8\"\x20/>\r\n<meta\x
+SF:20http-equiv=\"X-UA-Compatible\"\x20content=\"IE=edge,chrome=1\"/>\r\n<
+SF:meta\x20name=\"referrer\"\x20content=\"no-referrer\"/>\r\n<script>if\(s
+SF:elf!=top\)\x20top\.location=self\.location\r\n\r\nif\(!window\.name\){\
+SF:r\n\x20\x20\x20\x20\x20\x20\x20\x20location\.reload\(\);\r\n\x20\x20\x2
+SF:0\x20\x20\x20\x20\x20window\.name\x20=\x20'Bell';\r\n}\r\n</script>\r\n
+SF:<link\x20rel=\"stylesheet\"\x20href='/css_glb/main\.css'\x20type='text/
+SF:css'/>\r\n<")%r(HTTPOptions,206,"HTTP/1\.0\x20501\x20Not\x20Implemented
+SF:\r\nReferrer-Policy:\x20no-referrer\r\nServer:\x20thttpd\r\nContent-Typ
+SF:e:\x20text/html;\x20charset=utf-8\r\nDate:\x20Thu,\x2013\x20Nov\x202025
+SF:\x2008:39:47\x20GMT\r\nLast-Modified:\x20Thu,\x2013\x20Nov\x202025\x200
+SF:8:39:47\x20GMT\r\nAccept-Ranges:\x20bytes\r\nConnection:\x20close\r\nCa
+SF:che-Control:\x20no-cache,no-store\r\n\r\n<HTML>\n<HEAD><TITLE>501\x20No
+SF:t\x20Implemented</TITLE></HEAD>\n<BODY\x20BGCOLOR=\"#cc9999\"\x20TEXT=\
+SF:"#000000\"\x20LINK=\"#2020ff\"\x20VLINK=\"#4040cc\">\n<H2>501\x20Not\x2
+SF:0Implemented</H2>\nThe\x20requested\x20method\x20'OPTIONS'\x20is\x20not
+SF:\x20implemented\x20by\x20this\x20server\.\n<HR>\n</BODY>\n</HTML>\n")%r
+SF:(RTSPRequest,206,"RTSP/1\.0\x20501\x20Not\x20Implemented\r\nReferrer-Po
+SF:licy:\x20no-referrer\r\nServer:\x20thttpd\r\nContent-Type:\x20text/html
+SF:;\x20charset=utf-8\r\nDate:\x20Thu,\x2013\x20Nov\x202025\x2008:39:47\x2
+SF:0GMT\r\nLast-Modified:\x20Thu,\x2013\x20Nov\x202025\x2008:39:47\x20GMT\
+SF:r\nAccept-Ranges:\x20bytes\r\nConnection:\x20close\r\nCache-Control:\x2
+SF:0no-cache,no-store\r\n\r\n<HTML>\n<HEAD><TITLE>501\x20Not\x20Implemente
+SF:d</TITLE></HEAD>\n<BODY\x20BGCOLOR=\"#cc9999\"\x20TEXT=\"#000000\"\x20L
+SF:INK=\"#2020ff\"\x20VLINK=\"#4040cc\">\n<H2>501\x20Not\x20Implemented</H
+SF:2>\nThe\x20requested\x20method\x20'OPTIONS'\x20is\x20not\x20implemented
+SF:\x20by\x20this\x20server\.\n<HR>\n</BODY>\n</HTML>\n");
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port443-TCP:V=7.95%T=SSL%I=7%D=11/13%Time=69159955%P=x86_64-pc-linux-gn
+SF:u%r(GetRequest,1411,"HTTP/1\.0\x20200\x20OK\r\nCache-Control:private,ma
+SF:x-age=0;\r\nX-Frame-Options:SAMEORIGIN\r\nX-Content-Type-Options:nosnif
+SF:f\r\nX-XSS-Protection:1;\x20mode=block\r\nContent-Security-Policy:defau
+SF:lt-src\x20'self'\x20blob:\x20'unsafe-inline'\x20'unsafe-eval';img-src\x
+SF:20\*\x20data:\x20'unsafe-inline'\r\nStrict-Transport-Security:max-age=2
+SF:592000;\x20includeSubdomains\r\nReferrer-Policy:\x20no-referrer\r\nSet-
+SF:Cookie:\x20lang=eng;\x20path=/;\r\nContent-type:text/html;charset=UTF-8
+SF:;\r\n\r\n<!--\x20vim:fenc=utf-8\r\n-->\r\n<html>\r\n<head>\r\n<title>\r
+SF:\n\r\nGPON\x20Home\x20Gateway\r\n\r\n</title>\t\t\r\n<meta\x20http-equi
+SF:v=\"Content-Type\"\x20content=\"text/html;\x20charset=UTF-8\"\x20/>\r\n
+SF:<meta\x20http-equiv=\"X-UA-Compatible\"\x20content=\"IE=edge,chrome=1\"
+SF:/>\r\n<meta\x20name=\"referrer\"\x20content=\"no-referrer\"/>\r\n<scrip
+SF:t>if\(self!=top\)\x20top\.location=self\.location\r\n\r\nif\(!window\.n
+SF:ame\){\r\n\x20\x20\x20\x20\x20\x20\x20\x20location\.reload\(\);\r\n\x20
+SF:\x20\x20\x20\x20\x20\x20\x20window\.name\x20=\x20'Bell';\r\n}\r\n</scri
+SF:pt>\r\n<link\x20rel=\"stylesheet\"\x20href='/css_glb/main\.css'\x20type
+SF:='text/css'/>\r\n<")%r(HTTPOptions,206,"HTTP/1\.0\x20501\x20Not\x20Impl
+SF:emented\r\nReferrer-Policy:\x20no-referrer\r\nServer:\x20thttpd\r\nCont
+SF:ent-Type:\x20text/html;\x20charset=utf-8\r\nDate:\x20Thu,\x2013\x20Nov\
+SF:x202025\x2008:39:54\x20GMT\r\nLast-Modified:\x20Thu,\x2013\x20Nov\x2020
+SF:25\x2008:39:54\x20GMT\r\nAccept-Ranges:\x20bytes\r\nConnection:\x20clos
+SF:e\r\nCache-Control:\x20no-cache,no-store\r\n\r\n<HTML>\n<HEAD><TITLE>50
+SF:1\x20Not\x20Implemented</TITLE></HEAD>\n<BODY\x20BGCOLOR=\"#cc9999\"\x2
+SF:0TEXT=\"#000000\"\x20LINK=\"#2020ff\"\x20VLINK=\"#4040cc\">\n<H2>501\x2
+SF:0Not\x20Implemented</H2>\nThe\x20requested\x20method\x20'OPTIONS'\x20is
+SF:\x20not\x20implemented\x20by\x20this\x20server\.\n<HR>\n</BODY>\n</HTML
+SF:>\n")%r(FourOhFourRequest,292,"HTTP/1\.0\x20404\x20Not\x20Found\r\nRefe
+SF:rrer-Policy:\x20no-referrer\r\nServer:\x20thttpd\r\nContent-Type:\x20te
+SF:xt/html;\x20charset=utf-8\r\nDate:\x20Thu,\x2013\x20Nov\x202025\x2008:3
+SF:9:54\x20GMT\r\nLast-Modified:\x20Thu,\x2013\x20Nov\x202025\x2008:39:54\
+SF:x20GMT\r\nAccept-Ranges:\x20bytes\r\nConnection:\x20close\r\nCache-Cont
+SF:rol:\x20no-cache,no-store\r\n\r\n<html>\n<head>\n\n</head>\n<body>\n\t<
+SF:h1\x20style=\"text-align:\x20center;\x20height:\x20150px\">\n\t\t<span>
+SF:\n\t\t\tError\x20404\x20Not\x20found\n\t\t</span>\n\x20\x20\x20\x20</h1
+SF:>\n\x20\x20\x20\x20<p\x20style=\"text-align:center;\x20font-size:\x2016
+SF:px;\x20font-weight:\x20400;\x20padding:\x2010px\x2020px;\">\n\x20\x20\x
+SF:20\x20\x20\x20\x20\x20The\x20requested\x20URL\x20was\x20not\x20found\x2
+SF:0on\x20this\x20server\n\x20\x20\x20\x20\x20</p>\n\t<div\x20style=\"text
+SF:-align:\x20center;\">\n\t\t<a\x20href=\"/\">Home</a>\n\t</div>\n</body>
+SF:\n</html>\n<HR>\n</BODY>\n</HTML>\n");
+MAC Address: 5C:8C:30:CC:14:D0 (Taicang T&W Electronics)
+
+Nmap scan report for 192.168.1.2
+Host is up (0.0041s latency).
+All 1000 scanned ports on 192.168.1.2 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+MAC Address: EE:E7:D2:C7:6F:88 (Unknown)
+
+Nmap scan report for 192.168.1.7
+Host is up (0.00059s latency).
+All 1000 scanned ports on 192.168.1.7 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+MAC Address: F8:54:F6:75:BB:B5 (AzureWave Technology)
+
+Nmap scan report for 192.168.1.8
+Host is up (0.020s latency).
+All 1000 scanned ports on 192.168.1.8 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+MAC Address: 82:78:59:E8:82:B5 (Unknown)
+
+Nmap scan report for 192.168.1.47
+Host is up (0.0087s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT      STATE SERVICE    VERSION
+49152/tcp open  tcpwrapped
+62078/tcp open  tcpwrapped
+MAC Address: D6:E2:F1:0B:18:C0 (Unknown)
+
+Nmap scan report for 192.168.1.4
+Host is up (0.0000070s latency).
+All 1000 scanned ports on 192.168.1.4 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 256 IP addresses (6 hosts up) scanned in 89.58 seconds
+                                                                                                       
+┌──(root㉿kali)-[/home/kali]
+└─# sudo nmap -sS 192.168.1.0/24 -oA output && xsltproc /usr/share/nmap/nmap.xsl output.xml > output.html
+
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-13 14:11 IST
+Nmap scan report for dsldevice.lan (192.168.1.1)
+Host is up (0.0080s latency).
+Not shown: 996 filtered tcp ports (no-response)
+PORT      STATE  SERVICE
+80/tcp    open   http
+443/tcp   open   https
+445/tcp   closed microsoft-ds
+49157/tcp closed unknown
+MAC Address: 5C:8C:30:CC:14:D0 (Taicang T&W Electronics)
+
+Nmap scan report for 192.168.1.2
+Host is up (0.0036s latency).
+All 1000 scanned ports on 192.168.1.2 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+MAC Address: EE:E7:D2:C7:6F:88 (Unknown)
+
+Nmap scan report for 192.168.1.7
+Host is up (0.00018s latency).
+All 1000 scanned ports on 192.168.1.7 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+MAC Address: F8:54:F6:75:BB:B5 (AzureWave Technology)
+
+Nmap scan report for 192.168.1.8
+Host is up (0.022s latency).
+All 1000 scanned ports on 192.168.1.8 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+MAC Address: 82:78:59:E8:82:B5 (Unknown)
+
+Nmap scan report for 192.168.1.4
+Host is up (0.000011s latency).
+All 1000 scanned ports on 192.168.1.4 are in ignored states.
+Not shown: 1000 closed tcp ports (reset)
+
+Nmap done: 256 IP addresses (5 hosts up) scanned in 10.77 seconds
