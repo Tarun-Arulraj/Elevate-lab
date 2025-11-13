@@ -1,3 +1,4 @@
+1. NMAP INSTALLATION
 ──(root㉿kali)-[/home/kali]
 └─# sudo apt install -y nmap                                  
 nmap is already the newest version (7.95+dfsg-3kali1).
@@ -13,11 +14,15 @@ Use 'sudo apt autoremove' to remove them.
 
 Summary:
   Upgrading: 0, Installing: 0, Removing: 0, Not Upgrading: 1030
-                                                                                                       
+
+
+2. LOCAL IP 
 ┌──(root㉿kali)-[/home/kali]
 └─# ip -o -f inet addr show $(ip route show default | awk '{print $5}') | awk '{print $4}'
 192.168.1.4/24
-                                                                                                       
+
+
+3. nmap -sS 192.168.1.0/24 to perform TCP SYN scan
 ┌──(root㉿kali)-[/home/kali]
 └─# sudo nmap -sS 192.168.1.0/24
 Starting Nmap 7.95 ( https://nmap.org ) at 2025-11-13 13:39 IST
@@ -76,7 +81,9 @@ All 1000 scanned ports on 192.168.1.4 are in ignored states.
 Not shown: 1000 closed tcp ports (reset)
 
 Nmap done: 256 IP addresses (6 hosts up) scanned in 247.35 seconds
-                                                                                                       
+
+
+4. IP addresses and open ports found
 ┌──(root㉿kali)-[/home/kali]
 └─# sudo nmap -sS 192.168.1.0/24 -oG - | awk '/Up$/{print $2,$0}'
 
@@ -86,7 +93,10 @@ Nmap done: 256 IP addresses (6 hosts up) scanned in 247.35 seconds
 192.168.1.8 Host: 192.168.1.8 ()        Status: Up
 192.168.1.47 Host: 192.168.1.47 ()      Status: Up
 192.168.1.4 Host: 192.168.1.4 ()        Status: Up
-                                                                                                       
+
+
+
+5. Optionally analyze packet capture with wireshark (Stopped mid scan because it was optional and took much time to process)
 ┌──(root㉿kali)-[/home/kali]
 └─# sudo tcpdump -i eth0 -w scan_capture.pcap
 
@@ -94,7 +104,9 @@ tcpdump: listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 
 ^C1239 packets captured
 1239 packets received by filter
 0 packets dropped by kernel
-                                                                                                       
+
+
+6. Common services running on ports
 ┌──(root㉿kali)-[/home/kali]
 └─# grep "80/tcp" /etc/services
 
@@ -103,7 +115,10 @@ socks           1080/tcp                        # socks proxy server
 http-alt        8080/tcp        webcache        # WWW caching service
 amanda          10080/tcp                       # amanda backup services
 canna           5680/tcp                        # cannaserver
-                                                                                                       
+
+
+
+7. Identify potential risks from open ports 
 ┌──(root㉿kali)-[/home/kali]
 └─# sudo nmap -sV --script vuln 192.168.1.0/24
 
@@ -384,7 +399,10 @@ Not shown: 1000 closed tcp ports (reset)
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 256 IP addresses (6 hosts up) scanned in 89.58 seconds
-                                                                                                       
+
+
+
+8. Save scan results as a text and HTML file 
 ┌──(root㉿kali)-[/home/kali]
 └─# sudo nmap -sS 192.168.1.0/24 -oA output && xsltproc /usr/share/nmap/nmap.xsl output.xml > output.html
 
@@ -423,3 +441,4 @@ All 1000 scanned ports on 192.168.1.4 are in ignored states.
 Not shown: 1000 closed tcp ports (reset)
 
 Nmap done: 256 IP addresses (5 hosts up) scanned in 10.77 seconds
+
