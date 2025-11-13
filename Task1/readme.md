@@ -1,1 +1,3 @@
-This is Task 1
+In this task, I learned how to identify open ports and exposed services within my local network using Kali Linux. I began by installing Nmap and determining my local IP range to understand the subnet I was scanning. After identifying the network range, I performed a TCP SYN scan to discover active devices along with their open ports.
+
+I then reviewed and extracted the scan results to map each IP address to its corresponding open ports. To understand what services were running, I looked up common port–service associations and analyzed the potential security risks of any unnecessary or exposed services. Finally, I saved the scan output as both text and HTML files for documentation and reporting.
