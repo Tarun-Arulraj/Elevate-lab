@@ -1,0 +1,29 @@
+From: "Flipkart Support" <order-update@flipkarrt-secure.com>
+Reply-To: support@flipkart.com
+To: tarunarulraj23@gmail.com
+Subject: URGENT: Your Flipkart Order #8934217 — Action Required
+Date: Sat, 15 Nov 2025 09:12:04 +0530
+MIME-Version: 1.0
+Content-Type: text/html; charset="UTF-8"
+
+<html>
+<body>
+<p>Dear Tarun Arulraj,</p>
+
+<p>We were unable to process payment for your recent Flipkart order <b>#8934217</b>. 
+Your order will be <b>cancelled within 24 hours</b> unless you verify your payment details immediately.</p>
+
+<p><a href="http://flipkart-secure-checkout.in/login?uid=8934217">View Order & Verify Payment</a></p>
+
+<p>To avoid cancellation and potential account restrictions, please click the link above 
+and sign in to confirm your billing information.</p>
+
+<p>Note: For your security, failure to verify may result in temporary suspension of your Flipkart account.</p>
+
+<p>Kind regards,<br>
+Flipkart Support Team</p>
+
+<p><small>Attached: Invoice_8934217.pdf</small></p>
+
+</body>
+</html>
