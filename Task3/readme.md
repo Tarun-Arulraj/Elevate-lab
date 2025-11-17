@@ -1,0 +1,3 @@
+Task 3 — Start a Full Vulnerability Scan (Summary)
+
+In this task, I initiated a complete vulnerability scan on my local Windows machine using Nessus Essentials. After creating the scan in Task 2, I launched it through the Scans → My Scans section. Nessus then began performing a full assessment, including port enumeration, service identification, SSL/TLS analysis, SMB checks, configuration audits, and software vulnerability detection. The scan ran automatically without requiring user interaction and took several minutes to complete. Once finished, the scan results were saved and made available for detailed review in the next task.
