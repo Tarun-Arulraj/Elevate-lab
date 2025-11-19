@@ -1,1 +1,3 @@
-Task 4 
+In this task, I configured and tested firewall rules on a Linux system using UFW (Uncomplicated Firewall). I started by checking the firewall status and enabling UFW to make sure the firewall was active. I then listed the existing rules and created a new rule to block inbound traffic on port 23 (Telnet). After applying this rule, I tested it using the telnet command to confirm that the connection was successfully blocked by the firewall.
+
+Next, I added a rule to allow SSH on port 22, ensuring secure remote access remained available. After completing the tests, I removed the Telnet block rule to restore the firewall to its original configuration. This task provided hands-on experience with managing firewall rules, controlling network ports, and understanding how UFW filters and regulates traffic to improve system security.
